@@ -16,7 +16,6 @@ The services communicate with each other via HTTP APIs, using Docker for contain
   <img src="https://github.com/user-attachments/assets/f7d45fa5-9f1c-4930-ab6a-f72a9ee79fbb" alt="extended chatbot whether for online and offline service">
 </details>
 
-## Installation
 ## Running the Application
 
 ### Option 1: Using Individual Docker Containers
@@ -54,6 +53,10 @@ docker-compose down    # Stop and remove containers
 Once running, whether individually or Docker Compose, you can access the chat interface at http://localhost:5000.
 
 ## Features
-- Offline versioned
-- Extended to retrieve and mix insights from local and universal training.
-- Business-oriented and topic-aware interaction.
+
+- Natural Language Understanding for exercise requests
+- Personalized exercise recommendations based on body part and condition
+- Interface with real-time chat
+- Chat memory for consistent conversations
+- Focused recommendations for specific conditions
+- Professional physiotherapy guidance
