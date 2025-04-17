@@ -12,7 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_md
 
 # Copy rasa project
-COPY config/ ./config/
 COPY data/ ./data/
 COPY domain.yml config.yml endpoints.yml credentials.yml ./
 
