@@ -1,0 +1,228 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - good morning
+    - good evening
+    - hey there
+    - hi there
+    - hello there
+    - greetings
+    - howdy
+    - hello bot
+    - hey bot
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you around
+    - see you later
+    - bye bye
+    - thanks, goodbye
+    - good night
+    - catch you later
+    - have a nice day
+    - I'm off
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+    - sure
+    - definitely
+    - absolutely
+    - I agree
+    - sounds good
+    - that's right
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - not really
+    - nope
+    - not now
+    - I disagree
+    - I don't want to
+    - no thanks
+
+- intent: thanks
+  examples: |
+    - thanks
+    - thank you
+    - thanks a lot
+    - thanks for the help
+    - thank you so much
+    - I appreciate it
+    - that was helpful
+    - you've been helpful
+    - much appreciated
+    - great, thanks
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+    - who are you?
+    - what are you?
+    - are you real?
+    - are you an AI?
+    - what kind of bot are you?
+    - tell me about yourself
+
+- intent: ask_exercise
+  examples: |
+    - Can you recommend some exercises?
+    - What exercises should I do?
+    - I need exercises for my [back](body_part)
+    - Give me some [shoulder](body_part) exercises
+    - What can I do for my [knee](body_part) [pain](condition)?
+    - I have [neck](body_part) [stiffness](condition), what should I do?
+    - Exercises for [ankle](body_part) [sprain](condition)
+    - How can I strengthen my [back](body_part)?
+    - I need to rehabilitate my [shoulder](body_part)
+    - My [knee](body_part) hurts, what exercises help?
+    - I have [back](body_part) [pain](condition)
+    - I need rehabilitation for my [ankle](body_part)
+    - [Knee](body_part) strengthening exercises
+    - What can help with [shoulder](body_part) [pain](condition)?
+    - Rehabilitation for [neck](body_part) injury
+    - I injured my [back](body_part), what should I do?
+    - How to relieve [knee](body_part) [pain](condition)
+    - What's good for [neck](body_part) [stiffness](condition)?
+    - Need stretches for my [lower back](body_part)
+    - [Back](body_part) mobility exercises
+    - [Hip](body_part) [pain](condition) exercises
+    - [Wrist](body_part) strengthening
+    - I need to stretch my [hamstrings](body_part)
+
+- intent: inform_body_part
+  examples: |
+    - [Back](body_part)
+    - [Neck](body_part)
+    - [Shoulder](body_part)
+    - [Knee](body_part)
+    - [Ankle](body_part)
+    - [Hip](body_part)
+    - [Elbow](body_part)
+    - [Wrist](body_part)
+    - [Foot](body_part)
+    - [Leg](body_part)
+    - [Arm](body_part)
+    - [Lower back](body_part)
+    - [Upper back](body_part)
+    - [Hamstrings](body_part)
+    - [Quadriceps](body_part)
+    - [Calf](body_part)
+    - It's my [back](body_part)
+    - Problem is with my [neck](body_part)
+    - In my [shoulder](body_part)
+    - The [knee](body_part)
+    - My [ankle](body_part) hurts
+
+- intent: inform_condition
+  examples: |
+    - [Pain](condition)
+    - [Stiffness](condition)
+    - [Sprain](condition)
+    - [Strain](condition)
+    - [Weakness](condition)
+    - [Injury](condition)
+    - [Rehabilitation](condition)
+    - [Recovery](condition)
+    - [Strengthening](condition)
+    - [Mobility](condition)
+    - [Flexibility](condition)
+    - [Post-surgery](condition)
+    - It's [painful](condition)
+    - I have [stiffness](condition)
+    - A [sprain](condition)
+    - Need [strengthening](condition)
+    - For [rehabilitation](condition)
+    - Improve [mobility](condition)
+    - Better [flexibility](condition)
+    - After [surgery](condition)
+    - [Arthritis](condition)
+    - [Tendonitis](condition)
+    - [Bursitis](condition)
+
+- intent: ask_physiotherapy_info
+  examples: |
+    - What is physiotherapy?
+    - Tell me about physical therapy
+    - How does physiotherapy work?
+    - What do physiotherapists do?
+    - Benefits of physiotherapy
+    - Can physiotherapy help me?
+    - What conditions can physiotherapy treat?
+    - How long does physiotherapy take?
+    - What should I expect from physiotherapy?
+    - Is physiotherapy painful?
+    - Difference between physiotherapy and other treatments
+    - Who needs physiotherapy?
+    - Physical therapy vs. chiropractor
+    - What's the goal of physiotherapy?
+    - Why would someone need physical therapy?
+    - Physiotherapy rehabilitation process
+    - How to find a good physiotherapist
+    - Physiotherapy for sports injuries
+    - Physiotherapy for elderly
+    - Explain rehabilitation
+
+- intent: request_help
+  examples: |
+    - I need help
+    - Help me
+    - What can you do?
+    - How can you help me?
+    - What can I ask you?
+    - What are your capabilities?
+    - Tell me what you can do
+    - How to use this bot
+    - Can you give me some guidance?
+    - I'm not sure what to do
+    - I need assistance
+    - What should I ask?
+    - Give me options
+    - What kind of help can you provide?
+    - Show me what you can do
+    - I'm confused
+    - Guide me
+    - Start over
+
+- intent: out_of_scope
+  examples: |
+    - What is the weather today?
+    - Book me a flight
+    - Find a restaurant
+    - Tell me a joke
+    - Calculate 5 + 5
+    - Who is the president?
+    - What's the latest news?
+    - Play some music
+    - What time is it?
+    - I want to order food
+    - Tell me about politics
+    - What's your favorite movie?
+    - Do you like sports?
+    - Find me a hotel
+    - Translate this to Spanish
+    - What's the capital of France?
+    - How tall is Mount Everest?
+    - Will you marry me?
+    - Tell me about quantum physics
+    - Make me a sandwich

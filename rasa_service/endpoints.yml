@@ -1,0 +1,29 @@
+# This file contains the different endpoints your bot can use.
+
+# Server where the models are pulled from.
+# model_endpoint:
+#   url: http://models:8000/models/default/
+
+# Server which runs the Rasa Actions server
+action_endpoint:
+  url: http://actions:5055/webhook
+
+# Tracker store which is used to store the conversations.
+# By default the conversations are stored in memory.
+# tracker_store:
+#    type: redis
+#    url: <host of the redis instance, e.g. localhost>
+#    port: <port of your redis instance, usually 6379>
+#    db: <number of your database within redis, e.g. 0>
+#    password: <password used for authentication>
+#    use_ssl: <whether or not the communication is encrypted, default false>
+
+# Event broker which all conversation events should be streamed to.
+# https://rasa.com/docs/rasa/event-brokers
+
+# Event broker to publish events to a message broker like Kafka or RabbitMQ
+# event_broker:
+#  url: localhost
+#  username: username
+#  password: password
+#  queue: queue

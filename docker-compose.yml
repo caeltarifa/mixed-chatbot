@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # Rasa NLU/Core service
+  rasa:
+    build: 
+      context: ./rasa_service
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./rasa_service:/app
+    command: >
+      rasa run --enable-api 
+      --cors "*" 
+      --debug
+      --endpoints endpoints.yml
+    depends_on:
+      - actions
+    networks:
+      - physio-bot-network
+
+  # Rasa Actions service
+  actions:
+    build: 
+      context: ./actions_service
+      dockerfile: Dockerfile
+    ports:
+      - "5055:5055"
+    volumes:
+      - ./actions_service:/app
+    command: rasa run actions --debug
+    networks:
+      - physio-bot-network
+
+  # Flask Web service
+  flask:
+    build: 
+      context: ./flask_service
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./flask_service:/app
+    environment:
+      - RASA_API_URL=http://rasa:5005/webhooks/rest/webhook
+    depends_on:
+      - rasa
+    networks:
+      - physio-bot-network
+
+networks:
+  physio-bot-network:
+    driver: bridge
