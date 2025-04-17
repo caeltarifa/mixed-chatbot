@@ -7,7 +7,7 @@ This project uses a four-service microservices architecture:
 1. **Rasa Service**: Core NLU and dialogue management
 2. **Actions Service**: Custom action handlers for Rasa
 3. **Flask UI Service**: Web interface for user interaction
-4. **Langchain Service**: Access to the universal data training
+4. **Langchain Service**: Access to the universal data training (next up)
 
 The services communicate with each other via HTTP APIs, using Docker for containerization and Docker Compose for orchestration.
 
