@@ -1,0 +1,19 @@
+[server]
+port = 5000
+headless = true
+enableCORS = true
+enableXsrfProtection = false
+address = "0.0.0.0"
+
+[browser]
+gatherUsageStats = false
+serverAddress = "localhost"
+
+[global]
+developmentMode = false
+
+[theme]
+primaryColor = "#4b9ce2"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#262730"
