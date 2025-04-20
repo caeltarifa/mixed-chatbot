@@ -1,4 +1,0 @@
-rasa==3.6.6
-rasa-sdk==3.6.1
-spacy==3.5.3
-nltk==3.8.1
