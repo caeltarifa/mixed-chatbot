@@ -1,8 +1,7 @@
-import streamlit as st
-import logging
 import os
-from api_client import PhysioQAClient
-from components import render_chat_message, render_answer, display_header
+import logging
+import requests
+from flask import Flask, render_template, request, jsonify, session
 
 # Configure logging
 logging.basicConfig(
@@ -16,122 +15,139 @@ logger = logging.getLogger(__name__)
 backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
 logger.info(f"Using backend URL: {backend_url}")
 
-# Initialize API client
-api_client = PhysioQAClient(base_url=backend_url)
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "physio-qa-secret-key")
 
-# Add a debug message to help troubleshoot
-try:
-    health_status = api_client.health_check()
-    logger.info(f"Backend health check: {health_status}")
-except Exception as e:
-    logger.error(f"Failed to connect to backend: {str(e)}")
+# Initialize session with empty chat history
+def initialize_session():
+    if 'messages' not in session:
+        session['messages'] = []
 
-def initialize_session_state():
-    """Initialize session state variables if they don't exist"""
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-    
-    if "question" not in st.session_state:
-        st.session_state.question = ""
+@app.route('/')
+def index():
+    # Initialize session if it doesn't exist
+    initialize_session()
+    return render_template('index.html', messages=session['messages'])
 
-def handle_question_submission():
-    """Handle the submission of a question"""
-    question = st.session_state.question.strip()
+@app.route('/ask', methods=['POST'])
+def ask_question():
+    # Get question from form
+    question = request.form.get('question', '').strip()
     
     if not question:
-        st.warning("Please enter a question")
-        return
+        return jsonify({
+            'success': False,
+            'error': 'Please enter a question'
+        })
     
-    # Add user message to chat
-    st.session_state.messages.append({"role": "user", "content": question})
+    # Add user message to chat history
+    session['messages'].append({
+        'role': 'user',
+        'content': question
+    })
     
-    # Clear input
-    st.session_state.question = ""
-    
-    # Call API to get answer
-    with st.spinner("Getting answer..."):
-        try:
-            response = api_client.ask_question(question)
+    # Send request to backend API
+    try:
+        response = requests.post(
+            f"{backend_url}/api/ask",
+            json={
+                'question': question,
+                'top_k': 5
+            },
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            api_response = response.json()
             
-            if response["success"] and response["answers"]:
-                best_answer = response["answers"][0]
-                answer_content = best_answer["answer"]
-                context = best_answer["context"]
-                score = best_answer["score"]
+            if api_response['success'] and api_response['answers']:
+                best_answer = api_response['answers'][0]
+                answer_content = best_answer['answer']
+                context = best_answer.get('context', '')
+                score = best_answer.get('score', 0)
                 
-                # Add system message with answer
-                st.session_state.messages.append({
-                    "role": "assistant", 
-                    "content": answer_content,
-                    "context": context,
-                    "score": score
+                # Add assistant message to chat history
+                session['messages'].append({
+                    'role': 'assistant',
+                    'content': answer_content,
+                    'context': context,
+                    'score': score
+                })
+                
+                return jsonify({
+                    'success': True,
+                    'message': session['messages']
                 })
             else:
-                error_msg = response.get("error", "No answer found")
-                st.session_state.messages.append({
-                    "role": "assistant", 
-                    "content": f"I'm sorry, I couldn't find an answer to your question. {error_msg}",
-                    "error": True
+                error_msg = api_response.get('error', 'No answer found')
+                # Add error message to chat history
+                session['messages'].append({
+                    'role': 'assistant',
+                    'content': f"I'm sorry, I couldn't find an answer to your question. {error_msg}",
+                    'error': True
                 })
-        except Exception as e:
-            logger.error(f"Error getting answer: {str(e)}")
-            st.session_state.messages.append({
-                "role": "assistant", 
-                "content": "I'm sorry, there was an error processing your question. Please try again later.",
-                "error": True
-            })
-
-def main():
-    """Main Streamlit application"""
-    st.set_page_config(
-        page_title="Physiotherapy Q&A Assistant",
-        page_icon="💪",
-        layout="centered",
-        initial_sidebar_state="collapsed",
-    )
-    
-    # Initialize session state
-    initialize_session_state()
-    
-    # Display header
-    display_header()
-    
-    # Display chat messages
-    for message in st.session_state.messages:
-        render_chat_message(message)
-    
-    # Input for new question
-    st.text_input(
-        "Ask a question about physiotherapy:",
-        key="question",
-        on_change=handle_question_submission,
-        placeholder="e.g., What exercises help with lower back pain?"
-    )
-    
-    # Health check for backend service
-    try:
-        health = api_client.health_check()
-        if health.get("status") != "healthy":
-            st.sidebar.warning("⚠️ Backend service health check failed")
+                
+                return jsonify({
+                    'success': True,
+                    'message': session['messages']
+                })
         else:
-            st.sidebar.success("✅ Backend service is healthy")
-    except Exception as e:
-        st.sidebar.error(f"❌ Backend service unavailable: {str(e)}")
-    
-    # Instructions in sidebar
-    st.sidebar.title("About")
-    st.sidebar.info(
-        """
-        This application uses natural language processing to answer questions 
-        about physiotherapy. Ask about:
+            logger.error(f"API error: {response.status_code} - {response.text}")
+            # Add error message to chat history
+            session['messages'].append({
+                'role': 'assistant',
+                'content': f"I'm sorry, the API returned status code {response.status_code}.",
+                'error': True
+            })
+            
+            return jsonify({
+                'success': False,
+                'error': f"API returned status code {response.status_code}"
+            })
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Request failed: {str(e)}")
+        # Add error message to chat history
+        session['messages'].append({
+            'role': 'assistant',
+            'content': "I'm sorry, there was an error processing your question. Please try again later.",
+            'error': True
+        })
         
-        - Treatment techniques
-        - Exercises for specific conditions
-        - Rehabilitation protocols
-        - Pain management strategies
-        - General physiotherapy knowledge
-        """
-    )
+        return jsonify({
+            'success': False,
+            'error': f"Request failed: {str(e)}"
+        })
 
-if __name__ == "__main__":
-    main()
+@app.route('/health')
+def health_check():
+    try:
+        response = requests.get(f"{backend_url}/health", timeout=5)
+        if response.status_code == 200:
+            return jsonify({
+                'frontend': 'healthy',
+                'backend': response.json()
+            })
+        else:
+            return jsonify({
+                'frontend': 'healthy',
+                'backend': 'unhealthy',
+                'status_code': response.status_code
+            })
+    except requests.exceptions.RequestException as e:
+        return jsonify({
+            'frontend': 'healthy',
+            'backend': 'unhealthy',
+            'error': str(e)
+        })
+
+@app.route('/clear', methods=['POST'])
+def clear_history():
+    session['messages'] = []
+    return jsonify({
+        'success': True,
+        'message': 'Chat history cleared'
+    })
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
