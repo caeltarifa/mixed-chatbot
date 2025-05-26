@@ -1,0 +1,4 @@
+google-generativeai>=0.8.5
+haystack-ai>=2.13.2
+nltk>=3.9.1
+pypdf2>=3.0.1

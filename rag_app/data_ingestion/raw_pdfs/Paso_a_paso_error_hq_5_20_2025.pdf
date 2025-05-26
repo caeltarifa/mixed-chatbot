@@ -1,0 +1,36 @@
+Comprobación básica
+de que el servicio
+operó pese a que
+cloud no recibió data
+en determinado dia /
+horario
+                se busca en archivos la fecha y hora para corroborar que funciono
+
+Si tiene
+imagen
+actualmente
+funciona el
+servicio y la
+captura
+Si se encuentran
+los frames.
+Se debe ir al Edge
+para
+comprobación en
+edge problemática
+Se observan los errores
+Si observamos errores de
+mensajes de azure se debe
+borrar los device log (logs
+respectivos al device no al
+negocio )
+Luego se comprueba el número de logs
+sin sincronizar con la nube.
+Se debe
+enviar
+comando de
+force log en
+dia faltante
+Luego se repite la consulta a registros sin
+sincronizar. Deberia o reducirse a 0 o reducir el
+numero base.
